@@ -4,6 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:veriauth_onetruth/providers/app_provider.dart';
+import 'package:veriauth_onetruth/src/checkin.dart';
+import 'package:veriauth_onetruth/src/welcome_screen.dart';
 import 'package:veriauth_onetruth/utils/consts.dart';
 
 void main() {
@@ -54,11 +56,11 @@ class MyApp extends StatelessWidget {
       theme: appProvider.theme,
      
       routes: <String, WidgetBuilder>{
-        '/walkthrough': (BuildContext context) => new WalkthroughScreen(),
-        '/root': (BuildContext context) => new RootScreen(),
-        '/signin': (BuildContext context) => new CheckIn(),
-        '/signup': (BuildContext context) => new SignUpScreen(),
-        '/main': (BuildContext context) => new MainScreen(),
+      //  '/walkthrough': (BuildContext context) => new WalkthroughScreen(),
+       // '/root': (BuildContext context) => new RootScreen(),
+        '/checkin': (BuildContext context) => new Checkin(),
+        '/welcome': (BuildContext context) => new WelcomeScreen(),
+        //'/main': (BuildContext context) => new MainScreen(),
       },
 
       home: _displayCurrentScreen(),
@@ -71,7 +73,7 @@ class MyApp extends StatelessWidget {
 
     bool seen = (prefs.getBool('seen') ?? false);
 
-     if (seen) return new RootScreen();
-     else return new WalkthroughScreen(prefs: prefs);
+     if (seen) return new Checkin();
+     else return new WelcomeScreen();
   }
 }
