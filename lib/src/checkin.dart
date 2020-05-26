@@ -13,31 +13,33 @@ class _CheckinState extends State<Checkin> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: new AppBar(
-        elevation: 0.0,
+        elevation: 5.0,
         backgroundColor: Colors.green,
         title: Text(Constants.appName,style: TextStyle(fontSize: 25,)),
-        actions: <Widget>[
-          new IconButton(icon: Icon(Icons.refresh, color: Colors.white), onPressed: (){}),
-          new IconButton(icon: Icon(Icons.account_circle, color: Colors.white), onPressed: (){}),
-          ],
+        centerTitle: true,
+        
+        // actions: <Widget>[
+        //   new IconButton(icon: Icon(Icons.refresh, color: Colors.white), onPressed: (){}),
+        //   new IconButton(icon: Icon(Icons.account_circle, color: Colors.white), onPressed: (){}),
+        //   ],
       ),
       drawer: new Drawer(
         child: new ListView(
           children: <Widget>[
             // drawer header
-            new UserAccountsDrawerHeader(
-              accountEmail: Text('munasheshonge@gmail.com',style: TextStyle(fontSize: 18,color: Colors.white)), 
-              accountName: Text('Munashe Shonge',style: TextStyle(fontSize: 18,color: Colors.white)),
-              currentAccountPicture: new GestureDetector(
-                child: new CircleAvatar(
-                  //backgroundColor: Colors.grey,
-                 backgroundImage: AssetImage('assets/avatar.jpg'),
-                ),
-              ),
-                decoration: BoxDecoration(
-                  color: Colors.green
-                ),
-              ),
+            // new UserAccountsDrawerHeader(
+            //   accountEmail: Text('munasheshonge@gmail.com',style: TextStyle(fontSize: 18,color: Colors.white)), 
+            //   accountName: Text('Munashe Shonge',style: TextStyle(fontSize: 18,color: Colors.white)),
+            //   currentAccountPicture: new GestureDetector(
+            //     child: new CircleAvatar(
+            //       //backgroundColor: Colors.grey,
+            //      backgroundImage: AssetImage('assets/avatar.jpg'),
+            //     ),
+            //   ),
+            //     decoration: BoxDecoration(
+            //       color: Colors.green
+            //     ),
+            //   ),
 
               //body of nav drawer widget
               InkWell(
@@ -144,7 +146,7 @@ class _CheckinState extends State<Checkin> {
         _scan();
        // Navigator.of(context).pushNamed("/checkin");
       },
-      color: Colors.lightGreenAccent,
+      color: Colors.green,
        elevation: 5,
       textColor: Colors.white,
       child:Container(
