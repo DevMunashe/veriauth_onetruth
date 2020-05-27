@@ -12,8 +12,8 @@ class Constants{
   //Colors for theme
   static Color lightPrimary = Colors.white;
   static Color darkPrimary = Colors.black;
-  static Color lightAccent = HexColor('#AA6F73');
-  static Color darkAccent = HexColor('#AA6F73');
+  static Color lightAccent = Colors.red;
+  static Color darkAccent = Colors.red;
   static Color lightBG = Colors.white;
   static Color darkBG = Colors.black;
 
@@ -27,7 +27,7 @@ class Constants{
     appBarTheme: AppBarTheme(
       elevation: 0,
       textTheme: TextTheme(
-        headline6: TextStyle(
+        headline: TextStyle(
           fontFamily: "Ubuntu",
           color: Colors.white,
           fontSize: 20,
@@ -48,7 +48,7 @@ class Constants{
     appBarTheme: AppBarTheme(
       elevation: 0,
       textTheme: TextTheme(
-        headline6: TextStyle(
+        headline: TextStyle(
           fontFamily: "Ubuntu",
           color: lightBG,
           fontSize: 20,

@@ -1,14 +1,140 @@
+import 'package:easy_dialog/easy_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:veriauth_onetruth/utils/consts.dart';
-import 'package:veriauth_onetruth/utils/hexcolor.dart';
 import 'package:qrscan/qrscan.dart' as scanner;
+import 'dart:ui';
+import 'dart:async';
+
+import 'package:veriauth_onetruth/utils/progress_painter.dart';
 
 class Checkin extends StatefulWidget {
   @override
   _CheckinState createState() => _CheckinState();
 }
 
-class _CheckinState extends State<Checkin> {
+class _CheckinState extends State<Checkin>  with SingleTickerProviderStateMixin {
+
+ double _percentage;
+  double _nextPercentage;
+  Timer _timer;
+  AnimationController _progressAnimationController;
+  bool _progressDone;
+
+   @override
+  initState() {
+    super.initState();
+    _percentage = 0.0;
+    _nextPercentage = 0.0;
+    _timer = null;
+    _progressDone = false;
+    initAnimationController();
+  }
+
+  initAnimationController() {
+    _progressAnimationController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 1000),
+    )..addListener(
+        () {
+          setState(() {
+            _percentage = lerpDouble(_percentage, _nextPercentage,
+                _progressAnimationController.value);
+          });
+        },
+      );
+  }
+
+  start() {
+    Timer.periodic(Duration(milliseconds: 30), handleTicker);
+  }
+
+  handleTicker(Timer timer) {
+    _timer = timer;
+    if (_nextPercentage < 100) {
+      publishProgress();
+    } else {
+      timer.cancel();
+      setState(() {
+        _progressDone = true;
+      });
+    }
+  }
+
+  startProgress() {
+    if (null != _timer && _timer.isActive) {
+      _timer.cancel();
+    }
+    setState(() {
+      _percentage = 0.0;
+      _nextPercentage = 0.0;
+      _progressDone = false;
+      start();
+    });
+  }
+
+  publishProgress() {
+    setState(() {
+      _percentage = _nextPercentage;
+      _nextPercentage += 0.5;
+      if (_nextPercentage > 100.0) {
+        _percentage = 0.0;
+        _nextPercentage = 0.0;
+      }
+      _progressAnimationController.forward(from: 0.0);
+    });
+  }
+
+  getDoneImage() {
+    return Image.asset(
+      "images/checkmark.png",
+      width: 50,
+      height: 50,
+    );
+  }
+
+  getProgressText() {
+    return Text(
+      _nextPercentage == 0 ? '' : '${_nextPercentage.toInt()}',
+      style: TextStyle(
+          fontSize: 40, fontWeight: FontWeight.w800, color: Colors.green),
+    );
+  }
+
+  progressView() {
+    return CustomPaint(
+      child: Center(
+        child: _progressDone ? getDoneImage() : getProgressText(),
+      ),
+      foregroundPainter: ProgressPainter(
+          defaultCircleColor: Colors.amber,
+          percentageCompletedCircleColor: Colors.green,
+          completedPercentage: _percentage,
+          circleWidth: 10.0),
+    );
+  }
+
+  statusDialog(String qrcode){
+    return EasyDialog(
+      height: 300,
+      title: Text(
+        "Checking into " + qrcode ,
+        style: TextStyle(fontWeight: FontWeight.bold),
+        textScaleFactor: 1.2,
+      ),
+      // description: Text(
+      //   "This is a basic dialog",
+      //   textAlign: TextAlign.center,
+      // ),
+
+      contentList: [
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20.0, ),
+            child:SizedBox(child:  CircularProgressIndicator(backgroundColor: Colors.green,strokeWidth: 5.0,), height: 100,width: 100,))
+      ]).show(context);
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,7 +189,7 @@ class _CheckinState extends State<Checkin> {
                   child: ListTile(
                   title: Text('My ID', style: TextStyle(fontSize: 20, ),
                   ),
-                  leading: Icon(Icons.wb_sunny, color: Colors.orange,),
+                  leading: Icon(FontAwesome.qrcode, color: Colors.orange,),
                 ),
               ),
 
@@ -73,7 +199,7 @@ class _CheckinState extends State<Checkin> {
                   child: ListTile(
                   title: Text('Checkin History', style: TextStyle(fontSize: 20,),
                   ),
-                  leading: Icon(Icons.schedule, color: Colors.green,),
+                  leading: Icon(FontAwesome.history, color: Colors.green,),
                 ),
               ),
 
@@ -82,7 +208,7 @@ class _CheckinState extends State<Checkin> {
                   child: ListTile(
                   title: Text('My Account', style: TextStyle(fontSize: 20, ),
                   ),
-                  leading: Icon(Icons.multiline_chart, color: Colors.red,),
+                  leading: Icon(FontAwesome.user, color: Colors.red,),
                 ),
               ),
 
@@ -95,7 +221,7 @@ class _CheckinState extends State<Checkin> {
                   child: ListTile(
                   title: Text('Settings', style: TextStyle(fontSize: 20,),
                   ),
-                  leading: Icon(Icons.settings),
+                  leading: Icon(FontAwesome.cog),
                 ),
               ),
 
@@ -104,7 +230,7 @@ class _CheckinState extends State<Checkin> {
                   child: ListTile(
                   title: Text('About OneTruth', style: TextStyle(fontSize: 20),
                   ),
-                  leading: Icon(Icons.help),
+                  leading: Icon(FontAwesome.info),
                 ),
               )
           ],
@@ -133,17 +259,27 @@ class _CheckinState extends State<Checkin> {
             child: Center(child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Image.asset('assets/images/scan.png', height: 300, width: 300 ,),
+                Image.asset('assets/images/scan.png', height: 200, width: 200 ,),
 
                 Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 40.0),
+            padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 40.0),
             child:RaisedButton(
                                 
       shape: new RoundedRectangleBorder(
-        borderRadius: new BorderRadius.circular(5.0),
+        borderRadius: new BorderRadius.circular(10.0),
         side: BorderSide(color: Colors.white)),
       onPressed: () {
-        _scan();
+                   
+                   
+                  
+        _scan().then((qrcode) {
+          print("FUTURE CODE " + qrcode);
+ startProgress();
+ statusDialog(qrcode);
+           
+          
+        }
+        );
        // Navigator.of(context).pushNamed("/checkin");
       },
       color: Colors.green,
@@ -177,7 +313,8 @@ class _CheckinState extends State<Checkin> {
 
   Future _scan() async {
     String barcode = await scanner.scan();
-    print(barcode);
+    return barcode;
+   // print("CODE"+barcode);
     //this._outputController.text = barcode;
   }
 }

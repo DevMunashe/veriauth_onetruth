@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
+//import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:veriauth_onetruth/providers/app_provider.dart';
 import 'package:veriauth_onetruth/src/checkin.dart';
+import 'package:veriauth_onetruth/src/register.dart';
 import 'package:veriauth_onetruth/src/welcome_screen.dart';
 import 'package:veriauth_onetruth/utils/consts.dart';
 
@@ -42,15 +43,15 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
        key: appProvider.key,
           debugShowCheckedModeBanner: false,
-           localizationsDelegates: [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-      ],
-      locale: Locale('en', 'US'),
-      supportedLocales: [
-        const Locale('en', 'US'), // English
-        //const Locale('th', 'TH'), // Thai
-      ],
+      //      localizationsDelegates: [
+      //   GlobalMaterialLocalizations.delegate,
+      //   GlobalWidgetsLocalizations.delegate,
+      // ],
+      // locale: Locale('en', 'US'),
+      // supportedLocales: [
+      //   const Locale('en', 'US'), // English
+      //   //const Locale('th', 'TH'), // Thai
+      // ],
           navigatorKey: appProvider.navigatorKey,
           title: Constants.appName,
       theme: appProvider.theme,
@@ -60,7 +61,7 @@ class MyApp extends StatelessWidget {
        // '/root': (BuildContext context) => new RootScreen(),
         '/checkin': (BuildContext context) => new Checkin(),
         '/welcome': (BuildContext context) => new WelcomeScreen(),
-        //'/main': (BuildContext context) => new MainScreen(),
+      //  '/register': (BuildContext context) => new Register(),
       },
 
       home: _displayCurrentScreen(),
